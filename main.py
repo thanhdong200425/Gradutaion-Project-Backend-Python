@@ -68,13 +68,13 @@ def _ocr_result_page_text(res) -> str:
 
 def ocr_pdf_with_paddle(pdf_path: str, page_list: list[int] | None) -> str:
     ocr = _get_paddle_ocr()
-    pages_res = list(ocr.predict(pdf_path))
+    pages_result = list(ocr.predict(pdf_path))
 
     if page_list is not None:
         page_set = set(page_list)
-        pages_res = [r for r in pages_res if r.get("page_index") in page_set]
+        pages_result = [r for r in pages_result if r and r.get("page_index") in page_set]
 
-    parts = [_ocr_result_page_text(r) for r in pages_res]
+    parts = [_ocr_result_page_text(r) for r in pages_result]
     parts = [p for p in parts if p]
     return "\n\n".join(parts)
 
